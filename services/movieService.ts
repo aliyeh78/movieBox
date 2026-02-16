@@ -1,14 +1,36 @@
-// services/movieService.ts
-import type { Movie, Genre } from '@/types/movie'
+import type { Movie, CastMember } from '@/types/movie'
+
+interface MovieCredits {
+  id: number
+  cast: CastMember[]
+}
 
 export default {
-    /** Get movie details by ID */
-    async getMovieById(id: number): Promise<Movie> {
-        const config = useRuntimeConfig();
-        const API_KEY = config.public.tmdbKey;
-        const BASE_URL = config.public.tmdbBase;
-        return await $fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}&language=en-US`)
-    }
 
+  /** Get movie details by ID */
+  async getMovieById(id: number): Promise<Movie> {
+    const config = useRuntimeConfig();
+
+    return await $fetch(`/movie/${id}`, {
+      baseURL: config.public.tmdbBase,
+      params: {
+        api_key: config.public.tmdbKey,
+        language: 'en-US'
+      }
+    })
+  },
+
+  /** Get movie cast */
+  async getMovieCredits(id: number): Promise<MovieCredits> {
+    const config = useRuntimeConfig();
+
+    return await $fetch(`/movie/${id}/credits`, {
+      baseURL: config.public.tmdbBase,
+      params: {
+        api_key: config.public.tmdbKey,
+        language: 'en-US'
+      }
+    })
+  }
 
 }
