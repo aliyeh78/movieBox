@@ -1,5 +1,5 @@
 <template>
-  <div class="movie-row my-8 py-8">
+  <div class="movie-row my-6 py-6">
     <!-- Row title -->
     <h2 class="text-xl md:text-2xl font-bold mb-4 text-white p-1">
       {{ title }}

@@ -1,32 +1,10 @@
 <template>
   <div class="min-h-screen bg-base text-text-primary">
     <!-- HEADER -->
-    <header class="bg-surface border-b border-white/5">
-      <div
-        class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between"
-      >
-        <!-- Logo -->
-        <h1 class="text-2xl font-bold text-accent">MovieBox</h1>
-
-        <!-- Navigation -->
-        <nav class="flex items-center gap-8 text-text-secondary">
-          <NuxtLink to="/" class="hover:text-accent transition">
-            Home
-          </NuxtLink>
-
-          <NuxtLink to="/movies" class="hover:text-accent transition">
-            Movies
-          </NuxtLink>
-
-          <NuxtLink to="/series" class="hover:text-accent transition">
-            Series
-          </NuxtLink>
-        </nav>
-      </div>
-    </header>
+<Header></Header>  
 
     <!-- PAGE CONTENT -->
-    <main class="max-w-7xl mx-auto px-6 py-10">
+    <main class="max-w-7xl mx-auto px-6 pt-10">
       <slot />
     </main>
 
@@ -123,6 +101,9 @@
 </template>
 
  <script setup lang="ts">
+import Header from '~/components/layout/Header.vue';
+
+
       // Nothing needed here for now
     </script>
 

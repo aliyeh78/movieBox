@@ -1,5 +1,5 @@
 <template>
-  <div class="hero-slider relative pb-8">
+  <div class="hero-slider relative ">
     <!-- ================= MAIN SLIDER ================= -->
     <div ref="mainRef" class="keen-slider rounded-lg overflow-hidden relative">
       <div
