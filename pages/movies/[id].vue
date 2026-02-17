@@ -93,25 +93,22 @@
     <div class="mt-12">
       <h2 class="text-2xl font-semibold mb-4">Cast</h2>
 
-      <div class="flex gap-5 overflow-x-auto pb-4">
-        <div
-          v-for="actor in cast"
-          :key="actor.id"
-          class="w-[120px] shrink-0 text-center"
-        >
-          <img
-            :src="
-              actor.profile_path
-                ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
-                : '/no-image.png'
-            "
-            class="rounded-lg mb-2"
-          />
-
-          <p class="text-sm font-medium">{{ actor.name }}</p>
-          <p class="text-xs text-gray-400">{{ actor.character }}</p>
-        </div>
-      </div>
+      <BaseSlider :items="cast" :perView="8">
+        <template #default="{ item: actor }">
+          <div class="w-[120px] text-center">
+            <img
+              :src="
+                actor.profile_path
+                  ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+                  : '/no-image.png'
+              "
+              class="rounded-lg mb-2"
+            />
+            <p class="text-sm font-medium">{{ actor.name }}</p>
+            <p class="text-xs text-gray-400">{{ actor.character }}</p>
+          </div>
+        </template>
+      </BaseSlider>
     </div>
   </div>
 </template>
@@ -122,6 +119,7 @@ import { useRoute } from "vue-router";
 import movieService from "~/services/movieService";
 import useGenreService from "~/services/genreService";
 import type { Movie, Genre, CastMember } from "@/types/movie";
+import BaseSlider from '~/components/ui/BaseSlider.vue'
 
 const route = useRoute();
 const movieId = route.params.id as string;
@@ -165,4 +163,3 @@ onMounted(async () => {
 </script>
 
 <style scoped></style>
-
