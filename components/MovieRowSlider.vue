@@ -72,8 +72,8 @@
 
 <script setup lang="ts">
 import { ref, watch, nextTick, onBeforeUnmount } from "vue";
-import KeenSlider, { KeenSliderInstance } from "keen-slider";
-import "keen-slider/keen-slider.min.css";
+import KeenSlider from "keen-slider";
+import type { KeenSliderInstance } from "keen-slider";import "keen-slider/keen-slider.min.css";
 import type { Movie } from "@/types/movie";
 import tmdbService from "@/services/tmdbService";
 

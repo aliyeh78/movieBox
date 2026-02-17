@@ -1,46 +1,53 @@
-// services/tmdbService.ts
 import type { MovieResponse } from "@/types/movie";
+import useApi from "./apiService";
 
-const endpoints: Record<string, string> = {
+
+const endpoints = {
   now_playing: "/movie/now_playing",
   popular: "/movie/popular",
   top_rated: "/movie/top_rated",
   upcoming: "/movie/upcoming",
   tv: "/tv/popular",
-  streaming: "/discover/movie?with_watch_providers=8&watch_region=US",
-};
+  streaming: "/discover/movie",
+} as const;
 
 export default {
-  async getMovies(category: keyof typeof endpoints = "now_playing"): Promise<MovieResponse> {
-    const config = useRuntimeConfig();
-    const API_KEY = config.public.tmdbKey;
-    const BASE_URL = config.public.tmdbBase;
+  async getMovies(
+    category: keyof typeof endpoints = "now_playing"
+  ): Promise<MovieResponse> {
+    const { get } = useApi();
 
-    // ✅ default to now_playing if invalid category
-    const pathRaw = endpoints[category];
-    const path = pathRaw ?? endpoints.now_playing;
+    const path = endpoints[category] ?? endpoints.now_playing;
 
-    // ✅ now path is guaranteed string
-    const url = `${BASE_URL}${path}${path?.includes("?") ? "&" : "?"}api_key=${API_KEY}`;
+    // streaming needs extra params
+    const params =
+      category === "streaming"
+        ? { with_watch_providers: 8, watch_region: "US" }
+        : {};
 
-    return await $fetch<MovieResponse>(url);
+    return await get<MovieResponse>(path, params);
   },
 
   async getNowPlaying() {
     return this.getMovies("now_playing");
   },
+
   async getPopular() {
     return this.getMovies("popular");
   },
+
   async getTopRated() {
     return this.getMovies("top_rated");
   },
+
   async getUpcoming() {
     return this.getMovies("upcoming");
   },
+
   async getTV() {
     return this.getMovies("tv");
   },
+
   async getStreaming() {
     return this.getMovies("streaming");
   },
