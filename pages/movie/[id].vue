@@ -12,7 +12,7 @@
           <img
             :src="`https://image.tmdb.org/t/p/original${movie.backdrop_path}`"
             :alt="movie.title"
-            class="w-full h-[450px] object-cover"
+            class="w-full h-[500px] object-cover object-[5%]"
           />
 
           <!-- Gradient -->
@@ -28,7 +28,7 @@
             @enter="(el, done) => enterAnimation(el, done)"
           >
             <!-- Content -->
-            <div class="absolute bottom-16 left-10 right-10 text-white">
+            <div class="absolute bottom-20 left-10 right-10 text-white">
               <div class="flex gap-8 items-end max-w-5xl">
                 <!-- Poster -->
                 <img

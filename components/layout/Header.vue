@@ -139,8 +139,8 @@ function onSearch() {
 // Go to result (movie or tv)
 // -------------------------
 function goToItem(item: SearchResult) {
-  if (item.media_type === "movie") router.push(`/movies/${item.id}`);
-  else if (item.media_type === "tv") router.push(`/series/${item.id}`);
+  if (item.media_type === "movie") router.push(`/movie/${item.id}`);
+  else if (item.media_type === "tv") router.push(`/serie/${item.id}`);
 
   liveResults.value = [];
   query.value = "";

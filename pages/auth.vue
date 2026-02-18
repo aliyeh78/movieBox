@@ -71,7 +71,7 @@ const submitSignup = () => {
 <template>
   <div class="pb-10 flex items-center justify-center bg-[#0f172a] pb-10">
 
-    <div class="relative w-[880px] h-[540px] rounded-2xl overflow-hidden flex shadow-[0_20px_80px_rgba(0,0,0,0.6)]  border border-slate-800">
+    <div class="relative w-[880px] h-[540px] rounded-2xl overflow-hidden flex shadow-[0_20px_80px_rgba(0,0,0,0.6)] bg-[#020617] border border-slate-800">
 
       <!-- LOGIN FORM -->
       <div class="w-1/2 flex items-center justify-center p-14">
