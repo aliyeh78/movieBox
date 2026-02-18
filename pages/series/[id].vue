@@ -146,10 +146,10 @@ onMounted(async () => {
   if (!movieId) return;
 
   // Fetch movie details
-  movie.value = await movieService.getById(Number(movieId),'movie');
+  movie.value = await movieService.getById(Number(movieId),'tv');
 
   // ⭐ Fetch cast
-  const credits = await movieService.getCredits(Number(movieId),'movie');
+  const credits = await movieService.getCredits(Number(movieId),'tv');
   cast.value = credits.cast.slice(0, 10);
 
   // Fetch genres

@@ -9,7 +9,7 @@
     <BaseSlider :items="movies">
       <template #default="{ item: movie }">
         <NuxtLink
-          :to="`/movies/${movie.id}`"
+          :to="getLink(movie)"
           class="group cursor-pointer relative"
         >
           <div class="relative rounded-lg overflow-hidden">
@@ -90,9 +90,15 @@ const movies = ref<Movie[]>([]);
 
 const fetchMovies = async () => {
   if (!props.category) return;
+
   const data = await tmdbService.getMovies(props.category);
-  movies.value = data.results.slice(0, 12);
+
+  movies.value = data.results.slice(0, 12).map((item) => ({
+    ...item,
+    media_type: props.category === "tv" ? "tv" : "movie", 
+  }));
 };
+
 
 watch(() => props.category, fetchMovies, { immediate: true });
 
@@ -101,6 +107,11 @@ function getColor(vote: number) {
   if (vote >= 5) return "#facc15";
   return "#ef4444";
 }
+function getLink(item: any) {
+  if (item.media_type === "tv") return `/series/${item.id}`;
+  return `/movies/${item.id}`;
+}
+
 </script>
 
 <style scoped>
