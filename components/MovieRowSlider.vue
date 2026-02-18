@@ -108,8 +108,8 @@ function getColor(vote: number) {
   return "#ef4444";
 }
 function getLink(item: any) {
-  if (item.media_type === "tv") return `/series/${item.id}`;
-  return `/movies/${item.id}`;
+  if (item.media_type === "tv") return `/serie/${item.id}`;
+  return `/movie/${item.id}`;
 }
 
 </script>

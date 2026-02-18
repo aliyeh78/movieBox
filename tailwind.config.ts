@@ -5,7 +5,7 @@ export default <Partial<Config>>{
   theme: {
     extend: {
       colors: {
-        base: '#1A1F28',
+        base: '#0f172a',
         surface: '#11161D',
         card: '#171C23',
         hover: '#1F2630',
