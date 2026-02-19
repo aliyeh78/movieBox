@@ -131,7 +131,6 @@
     </transition>
   </header>
 </template>
-
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
@@ -177,7 +176,7 @@ function onSearch() {
 
 function goToItem(item: SearchResult) {
   if (item.media_type === "movie") router.push(`/movie/${item.id}`);
-  else router.push(`/series/${item.id}`);
+  else router.push(`/serie/${item.id}`);
 
   liveResults.value = [];
   query.value = "";

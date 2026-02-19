@@ -9,7 +9,7 @@
       >
         <!-- Background -->
         <!-- First slide loads immediately -->
-        <img
+        <LazyImage
           v-if="index === 0"
           :src="`https://image.tmdb.org/t/p/original${movie.backdrop_path}`"
           :alt="movie.title"

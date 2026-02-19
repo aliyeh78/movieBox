@@ -1,28 +1,35 @@
-import { ref, onMounted, onBeforeUnmount } from "vue"
+import { ref, onMounted, onUnmounted } from "vue"
 
-export function useLazy() {
+/* global memory (important!) */
+const loadedImages = new Set<string>()
+
+export function useLazy(src?: string) {
   const el = ref<HTMLElement | null>(null)
-  const isVisible = ref(false)
   const hasLoaded = ref(false)
-
   let observer: IntersectionObserver | null = null
 
   onMounted(() => {
+    // if already loaded before → skip observer
+    if (src && loadedImages.has(src)) {
+      hasLoaded.value = true
+      return
+    }
+
     observer = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting) {
-          isVisible.value = true
           hasLoaded.value = true
+          if (src) loadedImages.add(src)
           observer?.disconnect()
         }
       },
-      { rootMargin: "200px" } // preload earlier
+      { rootMargin: "200px" } // preload before visible
     )
 
     if (el.value) observer.observe(el.value)
   })
 
-  onBeforeUnmount(() => observer?.disconnect())
+  onUnmounted(() => observer?.disconnect())
 
-  return { el, isVisible, hasLoaded }
+  return { el, hasLoaded }
 }

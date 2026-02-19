@@ -6,30 +6,45 @@ const props = defineProps<{
   src: string
   alt?: string
   class?: string
+  background?: boolean
 }>()
-
-const { el, hasLoaded } = useLazy()
-
+const { el, hasLoaded } = useLazy(props.src)
 const loaded = ref(false)
 
 function onLoad() {
   loaded.value = true
 }
 </script>
-
 <template>
+  <!-- BACKGROUND MODE -->
   <div
+    v-if="background"
+    ref="el"
+    class="absolute inset-0 overflow-hidden"
+    :class="class"
+  >
+    <div v-if="!loaded" class="absolute inset-0 skeleton"></div>
+
+    <img
+      v-show="hasLoaded"
+      :src="src"
+      :alt="alt"
+      class="w-full h-full object-cover transition-opacity duration-700"
+      :class="loaded ? 'opacity-100' : 'opacity-0'"
+      @load="onLoad"
+      loading="lazy"
+    />
+  </div>
+
+  <!-- NORMAL MODE -->
+  <div
+    v-else
     ref="el"
     class="relative overflow-hidden bg-zinc-900"
     :class="class"
   >
-    <!-- Skeleton shimmer -->
-    <div
-      v-if="!loaded"
-      class="absolute inset-0 skeleton"
-    ></div>
+    <div v-if="!loaded" class="absolute inset-0 skeleton"></div>
 
-    <!-- Image -->
     <img
       v-show="hasLoaded"
       :src="src"
@@ -41,9 +56,7 @@ function onLoad() {
     />
   </div>
 </template>
-
 <style scoped>
-/* ===== Netflix shimmer skeleton ===== */
 .skeleton {
   background: linear-gradient(
     110deg,
@@ -56,8 +69,6 @@ function onLoad() {
 }
 
 @keyframes shine {
-  to {
-    background-position-x: -200%;
-  }
+  to { background-position-x: -200%; }
 }
 </style>

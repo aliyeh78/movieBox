@@ -40,16 +40,29 @@ watch(
 
     if (!sliderRef.value) return;
 
-    slider = new KeenSlider(sliderRef.value, {
-      slides: { perView: props.perView ?? 6, spacing: 12 },
-      breakpoints: {
-        "(max-width: 1400px)": { slides: { perView: 4 } },
-        "(max-width: 768px)": { slides: { perView: 3 } },
-        "(max-width: 500px)": { slides: { perView: 2 } },
-      },
-      loop: true,
-      mode: "free-snap",
-    });
+slider = new KeenSlider(sliderRef.value, {
+  slides: { perView: props.perView ?? 6, spacing: 12 },
+  breakpoints: {
+    "(max-width: 1400px)": { slides: { perView: 4 } },
+    "(max-width: 768px)": { slides: { perView: 3 } },
+    "(max-width: 500px)": { slides: { perView: 2 } },
+  },
+  loop: true,
+  mode: "free-snap",
+
+  slideChanged(s) {
+    // preload next 4 slides
+    const rel = s.track.details.rel
+    const slides = sliderRef.value?.querySelectorAll("img[data-src]")
+
+    slides?.forEach((img: any, i: number) => {
+      if (Math.abs(i - rel) < 4 && img.dataset.src) {
+        img.src = img.dataset.src
+        delete img.dataset.src
+      }
+    })
+  }
+})
 
     startAutoplay();
   },

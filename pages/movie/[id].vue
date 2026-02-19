@@ -9,7 +9,8 @@
       >
         <div class="keen-slider__slide relative">
           <!-- Background -->
-          <img
+          <LazyImage
+            eager
             :src="`https://image.tmdb.org/t/p/original${movie.backdrop_path}`"
             :alt="movie.title"
             class="w-full h-[500px] object-cover object-[5%]"
@@ -31,13 +32,12 @@
             <div class="absolute bottom-20 left-10 right-10 text-white">
               <div class="flex gap-8 items-end max-w-5xl">
                 <!-- Poster -->
-                <img
+                <LazyImage
                   v-if="movie"
                   :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
                   :alt="movie.title"
                   class="w-40 md:w-56 rounded-xl shadow-2xl shrink-0"
                 />
-
                 <!-- Movie Info -->
                 <div class="space-y-4">
                   <!-- Genres -->
@@ -82,10 +82,11 @@
           </transition>
         </div>
       </div>
-      <img
+      <LazyImage
         v-if="movie"
+        background
         :src="`https://image.tmdb.org/t/p/original${movie.backdrop_path}`"
-        class="absolute inset-0 w-full h-full object-cover -z-10"
+        class="-z-10 opacity-40 blur-xl"
         :alt="movie.title"
       />
     </div>
@@ -96,13 +97,13 @@
       <BaseSlider :items="cast" :perView="8">
         <template #default="{ item: actor }">
           <div class="w-[120px] text-center">
-            <img
+            <LazyImage
               :src="
                 actor.profile_path
                   ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
                   : '/no-image.png'
               "
-              class="rounded-lg mb-2"
+              class="rounded-lg mb-2 aspect-[2/3]"
             />
             <p class="text-sm font-medium">{{ actor.name }}</p>
             <p class="text-xs text-gray-400">{{ actor.character }}</p>
@@ -119,8 +120,8 @@ import { useRoute } from "vue-router";
 import movieService from "~/services/movieService";
 import useGenreService from "~/services/genreService";
 import type { Movie, Genre, CastMember } from "@/types/movie";
-import BaseSlider from '~/components/ui/BaseSlider.vue'
-
+import BaseSlider from "~/components/ui/BaseSlider.vue";
+import LazyImage from "~/components/ui/LazyImage.vue";
 const route = useRoute();
 const movieId = route.params.id as string;
 
@@ -146,10 +147,10 @@ onMounted(async () => {
   if (!movieId) return;
 
   // Fetch movie details
-  movie.value = await movieService.getById(Number(movieId),'movie');
+  movie.value = await movieService.getById(Number(movieId), "movie");
 
   // ⭐ Fetch cast
-  const credits = await movieService.getCredits(Number(movieId),'movie');
+  const credits = await movieService.getCredits(Number(movieId), "movie");
   cast.value = credits.cast.slice(0, 10);
 
   // Fetch genres

@@ -1,5 +1,5 @@
 <template>
-  <div class="movie-row my-6 py-6">
+  <div class="movie-row my-6 py-6" v-if="movies && movies.length>0">
     <!-- Row title -->
     <h2 class="text-xl md:text-2xl font-bold mb-4 text-white p-1">
       {{ title }}
@@ -8,26 +8,22 @@
     <!-- Slider -->
     <BaseSlider :items="movies">
       <template #default="{ item: movie }">
-        <NuxtLink
-          :to="getLink(movie)"
-          class="group cursor-pointer relative"
-        >
+        <NuxtLink :to="getLink(movie)" class="group cursor-pointer relative">
           <div class="relative rounded-lg overflow-hidden">
-            <img
+            <LazyImage
               :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
               :alt="movie.title"
               class="w-full h-[250px] object-cover transition-transform duration-300 group-hover:scale-110"
             />
 
-
-
             <!-- title hover -->
             <div
               class="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition flex items-end p-3"
             >
-
               <!-- Circular vote -->
-              <div class="absolute top-2 opacity-0 group-hover:opacity-100 left-2 z-20">
+              <div
+                class="absolute top-2 opacity-0 group-hover:opacity-100 left-2 z-20"
+              >
                 <div
                   class="relative w-8 h-8 bg-black/70 rounded-full flex items-center justify-center"
                 >
@@ -58,8 +54,8 @@
                   </span>
                 </div>
               </div>
-          
-               <div
+
+              <div
                 class="absolute top-2 opacity-0 group-hover:opacity-100 right-2 z-20"
               >
                 <FavoriteButton
@@ -87,7 +83,7 @@ import type { Movie } from "@/types/movie";
 import tmdbService from "@/services/tmdbService";
 import BaseSlider from "@/components/ui/BaseSlider.vue";
 import FavoriteButton from "@/components/ui/FavoriteButton.vue";
-
+import LazyImage from "@/components/ui/LazyImage.vue"
 const props = defineProps<{
   title: string;
   category?:
@@ -108,10 +104,9 @@ const fetchMovies = async () => {
 
   movies.value = data.results.slice(0, 12).map((item) => ({
     ...item,
-    media_type: props.category === "tv" ? "tv" : "movie", 
+    media_type: props.category === "tv" ? "tv" : "movie",
   }));
 };
-
 
 watch(() => props.category, fetchMovies, { immediate: true });
 
@@ -124,7 +119,6 @@ function getLink(item: any) {
   if (item.media_type === "tv") return `/serie/${item.id}`;
   return `/movie/${item.id}`;
 }
-
 </script>
 
 <style scoped>
