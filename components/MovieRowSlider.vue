@@ -20,8 +20,14 @@
             />
 
 
+
+            <!-- title hover -->
+            <div
+              class="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition flex items-end p-3"
+            >
+
               <!-- Circular vote -->
-              <div class="absolute top-2 left-2 z-20">
+              <div class="absolute top-2 opacity-0 group-hover:opacity-100 left-2 z-20">
                 <div
                   class="relative w-8 h-8 bg-black/70 rounded-full flex items-center justify-center"
                 >
@@ -53,11 +59,17 @@
                 </div>
               </div>
           
-
-            <!-- title hover -->
-            <div
-              class="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition flex items-end p-3"
-            >
+               <div
+                class="absolute top-2 opacity-0 group-hover:opacity-100 right-2 z-20"
+              >
+                <FavoriteButton
+                  :id="movie.id"
+                  :media_type="movie.media_type"
+                  :title="movie.title"
+                  :poster_path="movie.poster_path"
+                  :vote_average="movie.vote_average"
+                />
+              </div>
               <p class="opacity-0 group-hover:opacity-100 text-white text-sm">
                 {{ movie.title }}
               </p>
@@ -74,6 +86,7 @@ import { ref, watch } from "vue";
 import type { Movie } from "@/types/movie";
 import tmdbService from "@/services/tmdbService";
 import BaseSlider from "@/components/ui/BaseSlider.vue";
+import FavoriteButton from "@/components/ui/FavoriteButton.vue";
 
 const props = defineProps<{
   title: string;
