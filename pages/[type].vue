@@ -62,7 +62,7 @@ function goToPageLink(t: "movie" | "tv") {
       <div v-else-if="error" class="text-center py-20 text-red-400">Something went wrong.</div>
 
       <!-- Results -->
-      <div v-else class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div v-else class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
         <div v-for="item in results" :key="item.id" class="bg-surface rounded-xl overflow-hidden shadow hover:scale-105 transition">
           <NuxtLink :to="`/${goToPageLink(type)}/${item.id}`">
             <img v-if="item.poster_path" :src="`https://image.tmdb.org/t/p/w500${item.poster_path}`" class="w-full h-72 object-cover" />
