@@ -1,5 +1,5 @@
 <template>
-  <div class="hero-slider relative ">
+  <div class="hero-slider relative">
     <!-- ================= MAIN SLIDER ================= -->
     <div ref="mainRef" class="keen-slider rounded-lg overflow-hidden relative">
       <div
@@ -8,7 +8,17 @@
         class="keen-slider__slide relative"
       >
         <!-- Background -->
+        <!-- First slide loads immediately -->
         <img
+          v-if="index === 0"
+          :src="`https://image.tmdb.org/t/p/original${movie.backdrop_path}`"
+          :alt="movie.title"
+          class="w-full h-[450px] object-cover"
+        />
+
+        <!-- Other slides lazy -->
+        <LazyImage
+          v-else
           :src="`https://image.tmdb.org/t/p/original${movie.backdrop_path}`"
           :alt="movie.title"
           class="w-full h-[450px] object-cover"
@@ -30,8 +40,8 @@
             v-if="activeIndex === index"
             class="absolute bottom-8 left-8 text-white max-w-lg"
           >
-               <!-- Genre tags -->
-            <div class="flex flex-wrap gap-2 mb-2 ">
+            <!-- Genre tags -->
+            <div class="flex flex-wrap gap-2 mb-2">
               <span
                 v-for="genre in movie.genreNames"
                 :key="genre"
@@ -41,13 +51,13 @@
               </span>
             </div>
 
-             <!-- Title -->
+            <!-- Title -->
             <h2 class="text-3xl md:text-4xl font-bold mb-2 pb-6">
               {{ movie.title }}
             </h2>
 
-              <!-- IMDb -->
-            <div class="inline-flex items-center space-x-2 py-2 ">
+            <!-- IMDb -->
+            <div class="inline-flex items-center space-x-2 py-2">
               <div
                 class="bg-black text-yellow-400 font-bold rounded px-2 py-1 text-xs tracking-wider"
               >
@@ -60,7 +70,6 @@
               </div>
             </div>
 
-         
             <p class="hidden md:block text-sm text-gray-300">
               {{ movie.overview }}
             </p>
@@ -84,7 +93,7 @@
         }"
         @click="goToSlide(index)"
       >
-        <img
+        <LazyImage
           :src="`https://image.tmdb.org/t/p/w300${movie.backdrop_path}`"
           :alt="movie.title"
           class="w-28 h-16 md:w-36 md:h-20 object-cover transition-transform duration-300 hover:scale-110"
@@ -101,6 +110,7 @@ import type { KeenSliderInstance } from "keen-slider";
 import "keen-slider/keen-slider.min.css";
 import useGenreService from "@/services/genreService";
 import type { Movie } from "@/types/movie";
+import LazyImage from "~/components/ui/LazyImage.vue";
 
 interface MovieWithGenres extends Movie {
   genreNames: string[];
