@@ -19,14 +19,13 @@
         </nav>
 
         <!-- Desktop Search -->
-        <div class="relative w-64">
+        <div ref="searchContainer" class="relative w-64">
           <input
             v-model="query"
             type="text"
             placeholder="Search movies, series..."
             class="w-full bg-base text-text-primary placeholder-text-secondary border border-white/10 rounded-lg px-4 py-1 focus:outline-none focus:ring-2 focus:ring-accent"
           />
-
           <button
             @click="onSearch"
             class="absolute right-2 top-1/2 -translate-y-1/2 text-text-secondary hover:text-accent"
@@ -39,7 +38,6 @@
             v-if="query.trim()"
             class="absolute left-0 right-0 mt-2 bg-surface border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50"
           >
-            <!-- Show results if available -->
             <li
               v-for="item in liveResults"
               :key="item.id"
@@ -60,16 +58,12 @@
                 </span>
               </div>
             </li>
-
-            <!-- Loading -->
             <li
               v-if="searching"
               class="px-4 py-3 text-sm text-text-secondary text-center"
             >
               Searching...
             </li>
-
-            <!-- No results -->
             <li
               v-if="
                 !searching && liveResults.length === 0 && query.trim() !== ''
@@ -78,8 +72,6 @@
             >
               No results found for "{{ query }}"
             </li>
-
-            <!-- See all results button -->
             <li
               v-if="!searching && liveResults.length > 0"
               class="px-4 py-3 text-center"
@@ -114,17 +106,19 @@
       <!-- Hamburger -->
       <button
         class="md:hidden text-3xl text-text-primary"
-        @click="mobileOpen = !mobileOpen"
+        @click="toggleMenu"
+        aria-label="Toggle Menu"
       >
         ☰
       </button>
     </div>
 
     <!-- MOBILE MENU -->
+
     <transition name="slide">
       <div
-        v-if="mobileOpen"
-        class="md:hidden bg-surface border-t border-white/5 px-4 py-4 space-y-4"
+        v-show="mobileOpen"
+        class="md:hidden fixed top-16 left-0 w-full bg-surface border-t border-white/5 px-4 py-4 space-y-4 z-50"
       >
         <!-- Mobile Search -->
         <div class="relative">
@@ -155,12 +149,14 @@
           <NuxtLink
             to="/auth"
             class="flex-1 text-center py-2 rounded bg-accent text-black font-semibold"
+            @click="closeMobile"
           >
             Login
           </NuxtLink>
           <NuxtLink
             to="/auth"
             class="flex-1 text-center py-2 rounded border border-accent text-accent font-semibold"
+            @click="closeMobile"
           >
             Sign Up
           </NuxtLink>
@@ -171,22 +167,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { ref, watch, onMounted, onBeforeUnmount } from "vue";
+import { useRouter } from "vue-router";
 import searchTMDB from "~/services/searchApiService";
 import type { SearchResult } from "~/types/search";
 
 const router = useRouter();
-const route = useRoute();
 
 const query = ref("");
 const liveResults = ref<SearchResult[]>([]);
 const searching = ref(false);
 const mobileOpen = ref(false);
-
-function closeMobile() {
-  mobileOpen.value = false;
-}
+const searchContainer = ref<HTMLElement | null>(null);
 
 // ----------------- Debounce -----------------
 function debounce(fn: Function, delay = 700) {
@@ -201,10 +193,11 @@ function debounce(fn: Function, delay = 700) {
 async function fetchLiveResults(q: string) {
   if (!q.trim()) {
     liveResults.value = [];
-    searching.value = true;
+    searching.value = false;
     return;
   }
 
+  searching.value = true;
   try {
     const data = await searchTMDB.search(q, 1);
     liveResults.value = data.results.slice(0, 5);
@@ -219,7 +212,6 @@ watch(query, () => debouncedSearch());
 // ----------------- Actions -----------------
 function onSearch() {
   if (!query.value.trim()) return;
-
   router.push({ path: "/search", query: { q: query.value } });
   clearSearch();
 }
@@ -227,7 +219,6 @@ function onSearch() {
 function goToItem(item: SearchResult) {
   if (item.media_type === "movie") router.push(`/movie/${item.id}`);
   else router.push(`/serie/${item.id}`);
-
   clearSearch();
 }
 
@@ -235,15 +226,34 @@ function goToItem(item: SearchResult) {
 function clearSearch() {
   query.value = "";
   liveResults.value = [];
+  // mobileOpen.value = false;
+}
+
+// ----------------- Click Outside Handler -----------------
+function handleClickOutside(e: MouseEvent) {
+  if (!searchContainer.value) return;
+  if (!(e.target instanceof Node)) return;
+  if (!searchContainer.value.contains(e.target)) {
+    clearSearch();
+  }
+}
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
+
+// ----------------- Mobile -----------------
+function closeMobile() {
   mobileOpen.value = false;
 }
 
-// ----------------- Clear on Route Change -----------------
-onMounted(() => {
-  router.afterEach(() => {
-    clearSearch();
-  });
-});
+const toggleMenu = () => {
+  mobileOpen.value = !mobileOpen.value;
+};
 </script>
 
 <style>

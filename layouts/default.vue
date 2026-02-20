@@ -26,13 +26,16 @@
             <h2 class="text-lg font-semibold mb-3">Explore</h2>
             <ul class="space-y-2 text-sm">
               <li>
-                <a href="#" class="hover:text-accent transition">Now Playing</a>
+                <a href="/now-playing" class="hover:text-accent transition">Now Playing</a>
               </li>
               <li>
-                <a href="#" class="hover:text-accent transition">Top Rated</a>
+                <a href="/now-playing" class="hover:text-accent transition">Top Rated</a>
               </li>
               <li>
-                <a href="#" class="hover:text-accent transition">Upcoming</a>
+                <a href="/now-playing" class="hover:text-accent transition">Upcoming</a>
+              </li>
+              <li>
+                <a href="/my-favorite" class="hover:text-accent transition">My Favorite</a>
               </li>
               <li>
                 <a href="/about" class="hover:text-accent transition">About</a>

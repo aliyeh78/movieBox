@@ -5,6 +5,7 @@ import DiscoverFilters from "~/components/discover/Filters.vue";
 import type { MovieResponse } from "~/types/movie";
 import { getList } from "~/services/list.get";
 import LazyImage from "~/components/ui/LazyImage.vue";
+import FavoriteButton from "~/components/ui/FavoriteButton.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -51,6 +52,9 @@ function getColor(vote: number) {
 function goToPageLink(t: "movie" | "tv") {
   return t === "tv" ? "serie" : "movie";
 }
+
+const getItemTitle = (item: (typeof results.value)[0]) =>
+  item.title || item.name || "Untitled";
 </script>
 
 <template>
@@ -125,12 +129,12 @@ function goToPageLink(t: "movie" | "tv") {
                 </div>
               </div>
 
-              <!-- Favorite -->
+              <!-- Favorite button -->
               <div class="absolute top-2 right-2 z-20">
                 <FavoriteButton
                   :id="item.id"
                   :media_type="type === 'tv' ? 'tv' : 'movie'"
-                  :title="item.title || item.name"
+                  :title="getItemTitle(item)"
                   :poster_path="item.poster_path"
                   :vote_average="item.vote_average"
                 />
@@ -138,7 +142,7 @@ function goToPageLink(t: "movie" | "tv") {
 
               <!-- Title -->
               <p class="text-white text-sm font-medium line-clamp-2">
-                {{ item.title || item.name}}
+                {{ item.title || item.name }}
               </p>
             </div>
           </div>
