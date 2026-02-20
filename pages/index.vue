@@ -22,8 +22,12 @@ import { computed } from "vue"
 // ------------------------------
 // Hero Movies (Now Playing)
 // ------------------------------
-const { data: heroData } = await useAsyncData("hero", () =>
-  tmdbService.getMovies('now_playing')
+const { data: heroData, pending: heroPending } = useAsyncData("hero", () =>
+  tmdbService.getMovies('now_playing'),
+  {
+    server: false,   
+    lazy: true       
+  }
 )
 const heroMovies = computed(() => heroData.value?.results.slice(0, 10) ?? [])
 </script>
