@@ -36,9 +36,10 @@
 
           <!-- Live Results -->
           <ul
-            v-if="liveResults.length"
-            class="absolute left-0 right-0 mt-2 bg-surface border border-white/10 rounded-xl shadow-2xl overflow-hidden"
+            v-if="query.trim()"
+            class="absolute left-0 right-0 mt-2 bg-surface border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50"
           >
+            <!-- Show results if available -->
             <li
               v-for="item in liveResults"
               :key="item.id"
@@ -51,13 +52,44 @@
                 class="w-10 h-14 object-cover rounded"
               />
               <div class="flex flex-col">
-                <span class="text-sm text-text-primary">
-                  {{ item.title || item.name }}
-                </span>
+                <span class="text-sm text-text-primary">{{
+                  item.title || item.name
+                }}</span>
                 <span class="text-xs text-text-secondary">
                   {{ item.media_type === "movie" ? "Movie" : "TV Series" }}
                 </span>
               </div>
+            </li>
+
+            <!-- Loading -->
+            <li
+              v-if="searching"
+              class="px-4 py-3 text-sm text-text-secondary text-center"
+            >
+              Searching...
+            </li>
+
+            <!-- No results -->
+            <li
+              v-if="
+                !searching && liveResults.length === 0 && query.trim() !== ''
+              "
+              class="px-4 py-3 text-sm text-text-secondary text-center"
+            >
+              No results found for "{{ query }}"
+            </li>
+
+            <!-- See all results button -->
+            <li
+              v-if="!searching && liveResults.length > 0"
+              class="px-4 py-3 text-center"
+            >
+              <button
+                @click="onSearch"
+                class="px-4 py-2 rounded bg-accent text-black font-semibold hover:opacity-90 transition"
+              >
+                See all results for "{{ query }}"
+              </button>
             </li>
           </ul>
         </div>
@@ -102,6 +134,12 @@
             placeholder="Search movies..."
             class="w-full bg-base border border-white/10 rounded-lg px-4 py-2"
           />
+          <button
+            @click="onSearch"
+            class="absolute right-2 top-1/2 -translate-y-1/2 text-text-secondary hover:text-accent"
+          >
+            🔍
+          </button>
         </div>
 
         <!-- Links -->
@@ -131,22 +169,26 @@
     </transition>
   </header>
 </template>
+
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { useRouter } from "vue-router";
+import { ref, watch, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import searchTMDB from "~/services/searchApiService";
 import type { SearchResult } from "~/types/search";
 
 const router = useRouter();
+const route = useRoute();
 
 const query = ref("");
 const liveResults = ref<SearchResult[]>([]);
+const searching = ref(false);
 const mobileOpen = ref(false);
 
 function closeMobile() {
   mobileOpen.value = false;
 }
 
+// ----------------- Debounce -----------------
 function debounce(fn: Function, delay = 700) {
   let timeout: any;
   return (...args: any[]) => {
@@ -155,34 +197,55 @@ function debounce(fn: Function, delay = 700) {
   };
 }
 
+// ----------------- Fetch Live Results -----------------
 async function fetchLiveResults(q: string) {
   if (!q.trim()) {
     liveResults.value = [];
+    searching.value = true;
     return;
   }
 
-  const data = await searchTMDB.search(q, 1);
-  liveResults.value = data.results.slice(0, 5);
+  try {
+    const data = await searchTMDB.search(q, 1);
+    liveResults.value = data.results.slice(0, 5);
+  } finally {
+    searching.value = false;
+  }
 }
 
-const debouncedSearch = debounce(() => fetchLiveResults(query.value), 700);
+const debouncedSearch = debounce(() => fetchLiveResults(query.value), 500);
 watch(query, () => debouncedSearch());
 
+// ----------------- Actions -----------------
 function onSearch() {
   if (!query.value.trim()) return;
+
   router.push({ path: "/search", query: { q: query.value } });
-  liveResults.value = [];
+  clearSearch();
 }
 
 function goToItem(item: SearchResult) {
   if (item.media_type === "movie") router.push(`/movie/${item.id}`);
   else router.push(`/serie/${item.id}`);
 
-  liveResults.value = [];
+  clearSearch();
+}
+
+// ----------------- Clear Search -----------------
+function clearSearch() {
   query.value = "";
+  liveResults.value = [];
   mobileOpen.value = false;
 }
+
+// ----------------- Clear on Route Change -----------------
+onMounted(() => {
+  router.afterEach(() => {
+    clearSearch();
+  });
+});
 </script>
+
 <style>
 .slide-enter-active,
 .slide-leave-active {
