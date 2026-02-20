@@ -35,7 +35,7 @@
                 <a href="#" class="hover:text-accent transition">Upcoming</a>
               </li>
               <li>
-                <a href="#" class="hover:text-accent transition">Popular</a>
+                <a href="/about" class="hover:text-accent transition">About</a>
               </li>
             </ul>
           </div>
