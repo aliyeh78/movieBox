@@ -5,7 +5,7 @@
     <div class="" v-if="movie">
       <div
         ref="mainRef"
-        class="keen-slider rounded-lg overflow-hidden relative"
+        class="keen-slider rounded-lg overflow-hidden relative pb-7"
       >
         <div class="keen-slider__slide relative">
           <!-- Background -->
@@ -92,7 +92,7 @@
       />
     </div>
 
-    <div class="py-10" v-if="cast && cast.length>0">
+    <div class="py-5" v-if="cast && cast.length>0">
       <h2 class="text-2xl font-semibold mb-4">Cast</h2>
 
       <BaseSlider :items="cast" :perView="8">

@@ -4,8 +4,8 @@ export interface Movie {
   name: string | undefined
   overview: string
   backdrop_path: string
-  poster_path: string       
-  vote_average: number      
+  poster_path: string
+  vote_average: number
   genre_ids: [];
 
 }
