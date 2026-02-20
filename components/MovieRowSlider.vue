@@ -12,7 +12,7 @@
           <div class="relative rounded-lg overflow-hidden">
             <LazyImage
               :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
-              :alt="movie.title"
+              :alt="movie.title || movie.name"
               class="w-full h-[250px] object-cover transition-transform duration-300 group-hover:scale-110"
             />
 
@@ -61,13 +61,13 @@
                 <FavoriteButton
                   :id="movie.id"
                   :media_type="movie.media_type"
-                  :title="movie.title"
+                  :title="movie.title || movie.name""
                   :poster_path="movie.poster_path"
                   :vote_average="movie.vote_average"
                 />
               </div>
               <p class="opacity-0 group-hover:opacity-100 text-white text-sm">
-                {{ movie.title }}
+                {{ movie.title || movie.name }}
               </p>
             </div>
           </div>

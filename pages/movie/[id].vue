@@ -12,7 +12,7 @@
           <LazyImage
             eager
             :src="`https://image.tmdb.org/t/p/original${movie.backdrop_path}`"
-            :alt="movie.title"
+            :alt="movie.title || movie.name""
             class="w-full h-[500px] object-cover object-[5%]"
           />
 
@@ -35,7 +35,7 @@
                 <LazyImage
                   v-if="movie"
                   :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
-                  :alt="movie.title"
+                  :alt="movie.title || movie.name""
                   class="w-40 md:w-56 rounded-xl shadow-2xl shrink-0"
                 />
                 <!-- Movie Info -->
@@ -53,7 +53,7 @@
 
                   <!-- Title -->
                   <h1 class="text-3xl md:text-5xl font-bold leading-tight">
-                    {{ movie.title }}
+                    {{ movie.title || movie.name }}
                   </h1>
 
                   <!-- IMDb -->
@@ -87,11 +87,11 @@
         background
         :src="`https://image.tmdb.org/t/p/original${movie.backdrop_path}`"
         class="-z-10 opacity-40 blur-xl"
-        :alt="movie.title"
+        :alt="movie.title || movie.name""
       />
     </div>
 
-    <div class="py-10" v-if="cast">
+    <div class="py-10" v-if="cast && cast.length>0">
       <h2 class="text-2xl font-semibold mb-4">Cast</h2>
 
       <BaseSlider :items="cast" :perView="8">

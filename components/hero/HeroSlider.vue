@@ -12,7 +12,7 @@
         <LazyImage
           v-if="index === 0"
           :src="`https://image.tmdb.org/t/p/original${movie.backdrop_path}`"
-          :alt="movie.title"
+          :alt="movie.title || movie.name"
           class="w-full h-[450px] object-cover"
         />
 
@@ -20,7 +20,7 @@
         <LazyImage
           v-else
           :src="`https://image.tmdb.org/t/p/original${movie.backdrop_path}`"
-          :alt="movie.title"
+          :alt="movie.title || movie.name"
           class="w-full h-[450px] object-cover"
         />
 
@@ -53,7 +53,7 @@
 
             <!-- Title -->
             <h2 class="text-3xl md:text-4xl font-bold mb-2 pb-6">
-              {{ movie.title }}
+              {{ movie.title || movie.name }}
             </h2>
 
             <!-- IMDb -->
@@ -95,7 +95,7 @@
       >
         <LazyImage
           :src="`https://image.tmdb.org/t/p/w300${movie.backdrop_path}`"
-          :alt="movie.title"
+          :alt="movie.title || movie.name"
           class="w-28 h-16 md:w-36 md:h-20 object-cover transition-transform duration-300 hover:scale-110"
         />
       </div>
