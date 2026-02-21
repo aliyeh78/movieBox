@@ -5,8 +5,8 @@ export default function useApi() {
 
   async function get<T>(endpoint: string, params: Record<string, any> = {}) {
     return await $fetch<T>(endpoint, {
+      baseURL: config.public.tmdbBase, 
       params: {
-        baseURL: config.public.tmdbBase,
         api_key: config.public.tmdbKey,
         language: "en-US",
         ...params,
