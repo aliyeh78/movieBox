@@ -1,4 +1,5 @@
 // server/api/list.get.ts
+import { useRuntimeConfig } from 'nuxt/app'
 import type { MovieResponse } from '~/types/movie'
 
 export async function getList(

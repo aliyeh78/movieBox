@@ -1,3 +1,6 @@
+import { useFetch } from "nuxt/app"
+import { computed, type Ref } from "vue"
+
 export const useDiscover = (
     type: "movie" | "tv",
     page: Ref<number>,

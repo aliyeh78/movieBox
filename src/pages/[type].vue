@@ -6,6 +6,7 @@ import type { MovieResponse } from "~/types/movie";
 import { getList } from "~/services/list.get";
 import LazyImage from "~/components/ui/LazyImage.vue";
 import FavoriteButton from "~/components/ui/FavoriteButton.vue";
+import { useAsyncData } from "nuxt/app";
 
 const route = useRoute();
 const router = useRouter();

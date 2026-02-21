@@ -1,4 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
@@ -12,6 +11,13 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss'],
   css: [
     'keen-slider/keen-slider.min.css'
-  ]
+  ],
+ srcDir: 'src/',
+   serverDir: 'src/server',
+  dir: {
+    public: 'src/public',
+    modules: 'src/modules',
+    shared: 'src/shared',
+  },
 
 })

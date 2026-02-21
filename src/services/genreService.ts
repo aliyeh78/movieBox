@@ -1,4 +1,5 @@
 import type { Genre } from "@/types/movie";
+import { useRuntimeConfig } from "nuxt/app";
 
 export default function useGenreService() {
   const config = useRuntimeConfig();

@@ -1,4 +1,5 @@
 import type { Movie, CastMember } from '@/types/movie'
+import { useRuntimeConfig } from 'nuxt/app'
 
 interface CreditsResponse {
   id: number
@@ -14,8 +15,9 @@ export default {
     const config = useRuntimeConfig()
 
     return await $fetch(`/${type}/${id}`, {
-      baseURL: config.public.tmdbBase,
+
       params: {
+        baseURL: config.public.tmdbBase,
         api_key: config.public.tmdbKey,
         language: 'en-US'
       }
@@ -27,8 +29,8 @@ export default {
     const config = useRuntimeConfig()
 
     return await $fetch(`/${type}/${id}/credits`, {
-      baseURL: config.public.tmdbBase,
       params: {
+        baseURL: config.public.tmdbBase,
         api_key: config.public.tmdbKey,
         language: 'en-US'
       }

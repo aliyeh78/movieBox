@@ -13,10 +13,11 @@
 </template>
 
 <script setup lang="ts">
-import HeroSlider from "~/components/hero/HeroSlider.vue"
+import HeroSlider from "@/components/hero/HeroSlider.vue"
 import MovieRowSlider from "~/components/MovieRowSlider.vue"
 import tmdbService from "~/services/tmdbService"
 import { computed } from "vue"
+import { useAsyncData } from "nuxt/app"
 
 // ------------------------------
 // Hero Movies (Now Playing)
