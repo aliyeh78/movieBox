@@ -6,6 +6,7 @@ export interface FavoriteItem {
   title: string
   poster_path: string | null
   vote_average?: number
+  release_date?:string
 }
 
 /* ---------- GLOBAL STATE (shared across whole app) ---------- */

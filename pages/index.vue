@@ -1,8 +1,7 @@
 <template>
-  <ClientOnly>
     <!-- Hero Slider -->
     <HeroSlider :movies="heroMovies" />
-
+  <ClientOnly>
     <!-- Movie Rows by Category -->
     <!-- <MovieRowSlider title="In Theaters" category="now_playing" /> -->
     <MovieRowSlider title="Top Rated" category="top_rated" />

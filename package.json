@@ -13,7 +13,8 @@
     "keen-slider": "^6.8.6",
     "nuxt": "^4.3.1",
     "vue": "^3.5.28",
-    "vue-router": "^4.6.4"
+    "vue-router": "^4.6.4",
+    "vue-virtual-scroller": "^2.0.0-beta.8"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.14.0",
