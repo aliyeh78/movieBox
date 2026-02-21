@@ -6,7 +6,7 @@ export interface Movie {
   backdrop_path: string
   poster_path: string
   vote_average: number
-  genre_ids: [];
+  genre_ids: number[];
 
 }
 export interface MovieResponse {
@@ -25,4 +25,8 @@ export interface CastMember {
   name: string
   character: string
   profile_path: string | null
+}
+
+export interface MovieDetails extends Movie {
+  genres: { id: number; name: string }[];
 }

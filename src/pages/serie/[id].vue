@@ -14,20 +14,16 @@
           ></div>
           <!-- Info -->
           <div class="flex-1 flex flex-col justify-end space-y-4 pt-5">
-            <!-- Genres -->
             <div class="flex flex-wrap gap-2">
               <div class="h-5 bg-gray-500 rounded w-16"></div>
               <div class="h-5 bg-gray-500 rounded w-20"></div>
               <div class="h-5 bg-gray-500 rounded w-12"></div>
             </div>
-            <!-- Title -->
             <div class="h-8 md:h-12 bg-gray-500 rounded w-3/4"></div>
-            <!-- IMDb -->
             <div class="flex gap-2 items-center mt-2">
               <div class="h-5 w-12 bg-gray-600 rounded"></div>
               <div class="h-5 w-8 bg-gray-600 rounded"></div>
             </div>
-            <!-- Overview -->
             <div class="space-y-2 mt-2">
               <div class="h-3 bg-gray-500 rounded w-full"></div>
               <div class="h-3 bg-gray-500 rounded w-5/6"></div>
@@ -64,8 +60,8 @@
           <!-- Background -->
           <LazyImage
             eager
-            :src="`https://image.tmdb.org/t/p/original${movie!.backdrop_path}`"
-            :alt="movie!.title || movie!.name"
+            :src="`https://image.tmdb.org/t/p/original${movie?.backdrop_path}`"
+            :alt="movie?.title || movie?.name"
             class="w-full h-[450px] object-cover"
           />
 
@@ -85,8 +81,8 @@
               <div class="flex gap-8 items-end max-w-5xl">
                 <!-- Poster -->
                 <LazyImage
-                  :src="`https://image.tmdb.org/t/p/w500${movie!.poster_path}`"
-                  :alt="movie!.title || movie!.name"
+                  :src="`https://image.tmdb.org/t/p/w500${movie?.poster_path}`"
+                  :alt="movie?.title || movie?.name"
                   class="w-40 md:w-56 rounded-xl shadow-2xl shrink-0"
                 />
 
@@ -105,7 +101,7 @@
 
                   <!-- Title -->
                   <h1 class="text-3xl md:text-5xl font-bold leading-tight">
-                    {{ movie!.title || movie!.name }}
+                    {{ movie?.title || movie?.name }}
                   </h1>
 
                   <!-- IMDb -->
@@ -118,7 +114,7 @@
                     <span
                       class="bg-yellow-400 text-black font-bold rounded px-2 py-1 text-xs"
                     >
-                      {{ movie!.vote_average.toFixed(1) }}
+                      {{ movie?.vote_average.toFixed(1) }}
                     </span>
                   </div>
 
@@ -126,7 +122,7 @@
                   <p
                     class="hidden md:block text-gray-300 max-w-xl leading-relaxed"
                   >
-                    {{ movie!.overview }}
+                    {{ movie?.overview }}
                   </p>
                 </div>
               </div>
@@ -138,13 +134,13 @@
       <!-- Blurred background -->
       <LazyImage
         background
-        :src="`https://image.tmdb.org/t/p/original${movie!.backdrop_path}`"
+        :src="`https://image.tmdb.org/t/p/original${movie?.backdrop_path}`"
         class="-z-10 opacity-40 blur-xl"
-        :alt="movie!.title || movie!.name"
+        :alt="movie?.title || movie?.name"
       />
 
       <!-- Cast Slider -->
-      <div class="py-5" v-if="cast && cast.length > 0">
+      <div class="py-5" v-if="cast?.length">
         <h2 class="text-2xl font-semibold mb-4">Cast</h2>
 
         <BaseSlider :items="cast" :perView="8">
@@ -203,24 +199,34 @@ onMounted(async () => {
   if (!movieId) return;
 
   loading.value = true;
-  // Let Vue render skeleton before fetching
   await nextTick();
 
   try {
     // Fetch movie details
-    movie.value = await movieService.getById(Number(movieId), "tv");
+    const type: "movie" | "tv" = "tv"; // adjust dynamically if needed
+    const data = await movieService.getById(Number(movieId), type);
 
-    // Fetch cast
-    const credits = await movieService.getCredits(Number(movieId), "tv");
-    cast.value = credits.cast.slice(0, 10);
-
-    // Fetch genres
-    const genres: Genre[] = await getGenres();
+    // Map response to Movie type
+    movie.value = {
+      id: data.id,
+      title: data.title,
+      name: data.name,
+      overview: data.overview,
+      backdrop_path: data.backdrop_path,
+      poster_path: data.poster_path,
+      vote_average: data.vote_average,
+      genre_ids: data.genres?.map((g) => g.id) || [],
+    };
 
     // Map genre IDs to names
+    const genres: Genre[] = await getGenres();
     genreNames.value = movie.value.genre_ids.map(
       (id) => genres.find((g) => g.id === id)?.name || "Unknown",
     );
+
+    // Fetch cast
+    const credits = await movieService.getCredits(Number(movieId), type);
+    cast.value = credits.cast.slice(0, 10);
   } finally {
     loading.value = false;
   }

@@ -1,5 +1,5 @@
-import type { Movie, CastMember } from '@/types/movie'
-import useApi from './apiService'
+import type { MovieDetails, CastMember } from '@/types/movie'
+import { useRuntimeConfig } from 'nuxt/app'
 
 interface CreditsResponse {
   id: number
@@ -11,15 +11,29 @@ type MediaType = 'movie' | 'tv'
 export default {
 
   /** Get details (movie or tv) */
-  async getById(id: number, type: MediaType): Promise<Movie> {
-    const { get } = useApi()
-    return await get<Movie>(`/${type}/${id}`)
+  async getById(id: number, type: MediaType): Promise<MovieDetails> {
+    const config = useRuntimeConfig()
+
+    return await $fetch(`/${type}/${id}`, {
+      baseURL: config.public.tmdbBase,
+      params: {
+        api_key: config.public.tmdbKey,
+        language: 'en-US'
+      }
+    })
   },
 
   /** Get credits (movie or tv) */
   async getCredits(id: number, type: MediaType): Promise<CreditsResponse> {
-    const { get } = useApi()
-    return await get<CreditsResponse>(`/${type}/${id}/credits`)
+    const config = useRuntimeConfig()
+
+    return await $fetch(`/${type}/${id}/credits`, {
+      baseURL: config.public.tmdbBase,
+      params: {
+        api_key: config.public.tmdbKey,
+        language: 'en-US'
+      }
+    })
   }
 
 }
